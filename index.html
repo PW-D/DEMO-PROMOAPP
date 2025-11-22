@@ -14,21 +14,48 @@
     <div class="container">
 
         <div class="tabs" role="tablist">
-            <button class="tab-btn active" data-view="restaurantes">Restaurantes</button>
+            <button class="tab-btn active" data-view="inicio">Inicio</button>
+            <button class="tab-btn" data-view="restaurantes">Restaurantes</button>
             <button class="tab-btn" data-view="promociones">Promociones</button>
         </div>
 
         <div class="layout">
 
-            <section id="view-restaurantes" class="card">
+            <section id="inicio" class="card">
+
+        <div class="slider" id="slider">
+             <div class="slides">
+                 <div class="slide"><img src="img/restaurantes/AntojitosLupillo.jpeg" alt=""></div>
+                 <div class="slide"><img src="img/restaurantes/Azucar&sal.jpeg" alt=""></div>
+                 <div class="slide"><img src="img/restaurantes/Comidachina.jpeg" alt=""></div>
+                 <div class="slide"><img src="img/restaurantes/Contodo.jpeg" alt=""></div>
+                 <div class="slide"><img src="img/restaurantes/HotDogs.jpeg" alt=""></div>
+                 <div class="slide"><img src="img/restaurantes/LaPatrona.jpeg" alt=""></div>
+                 <div class="slide"><img src="img/restaurantes/LaSierra.jpeg" alt=""></div>
+                 <div class="slide"><img src="img/restaurantes/LosAjillos.jpeg" alt=""></div>
+                 <div class="slide"><img src="img/restaurantes/Maax.jpeg" alt=""></div>
+                 <div class="slide"><img src="img/restaurantes/Mariscos.jpeg" alt=""></div>
+                 <div class="slide"><img src="img/restaurantes/Moctezuma.jpeg" alt=""></div>
+                 <div class="slide"><img src="img/restaurantes/Orsinis.jpeg" alt=""></div>
+                 <div class="slide"><img src="img/restaurantes/Taqueria.jpeg" alt=""></div>
+              </div>
+             <!-- Flechas -->
+             <button class="btn prev" onclick="mover(-1)">&#10094;</button>
+             <button class="btn next" onclick="mover(1)">&#10095;</button>
+
+             <!-- Dots -->
+             <div class="dots" id="dots"></div>
+             </div>
+
+        </section>
+            <section id="restaurantes" class="card" style="display:none;">
                 <div class="filtros">
                     <input type="text" id="buscar" placeholder="Buscar restaurante...">
                     </div>
 
-                <div id="restaurantes" class="grid-restaurantes"></div>
-            </section>
-
-            <section id="view-promociones" class="card" style="display:none;">
+                <div id="restaurantes-list" class="grid-restaurantes"></div>
+            </section>            
+            <section id="promociones" class="card" style="display:none;">
                 <div class="promos-header">
                     <h2>Promociones semanales</h2>
                     <div class="subtitle">Selecciona un día para ver promos</div>
@@ -47,6 +74,60 @@
             <div id="modal-body"></div>
         </div>
     </div>
+
+    <script>
+let index = 0;
+let autoPlay;
+
+const slides = document.querySelector(".slides");
+const slider = document.querySelector("#slider");
+const total = document.querySelectorAll(".slide").length;
+const dotsContainer = document.querySelector("#dots");
+
+// Crear dots
+for(let i = 0; i < total; i++){
+    let d = document.createElement("span");
+    d.classList.add("dot");
+    d.onclick = () => irA(i);
+    dotsContainer.appendChild(d);
+}
+
+function actualizar(){
+    slides.style.transform = `translateX(-${index * 100}%)`;
+
+    document.querySelectorAll(".dot").forEach((d, i) => {
+        d.classList.toggle("active", i === index);
+    });
+}
+
+function mover(dir){
+    index = (index + dir + total) % total;
+    actualizar();
+    reiniciarAuto();
+}
+
+function irA(i){
+    index = i;
+    actualizar();
+    reiniciarAuto();
+}
+
+function auto(){
+    autoPlay = setInterval(() => {
+        index = (index + 1) % total;
+        actualizar();
+    }, 3000);
+}
+
+function reiniciarAuto(){
+    clearInterval(autoPlay);
+    auto();
+}
+
+actualizar();
+auto();
+</script>
+
     <script>
     // BASE DE DATOS DINÁMICA
     const datosRestaurantes = [
@@ -182,7 +263,7 @@
     ];
 
     // Elementos del DOM
-    const contenedorRestaurantes = document.getElementById('restaurantes');
+    const contenedorRestaurantes = document.getElementById('restaurantes-list');
     const contenedorPromos = document.getElementById('promos');
     const contenedorDias = document.getElementById('days');
     const inputBuscar = document.getElementById('buscar');
@@ -399,6 +480,29 @@
     renderizarSelectorDias();
     filtrar();
     cambiarVista('restaurantes');
+</script>
+
+<script>
+const tabs = document.querySelectorAll(".tab-btn");
+const views = ["inicio", "restaurantes", "promociones"];
+
+tabs.forEach(btn => {
+    btn.addEventListener("click", () => {
+
+        // Activar botón seleccionado
+        tabs.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // Ocultar todas las vistas
+        views.forEach(id => {
+            document.getElementById(id).style.display = "none";
+        });
+
+        // Mostrar la vista seleccionada
+        const view = btn.dataset.view;
+        document.getElementById(view).style.display = "block";
+    });
+});
 </script>
 
 </body>
