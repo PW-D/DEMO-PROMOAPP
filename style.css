@@ -162,10 +162,11 @@ header h1 {
     position: relative;
 }
 
+/* MODIFICACIÓN CLAVE: contain para mostrar la imagen completa */
 .slide img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: contain; 
 }
 
 .slider .btn {
@@ -465,7 +466,26 @@ header h1 {
     border-bottom: 1px dashed #fcd34d;
 }
 
-/* --- ESTILOS DE LA VENTANA MODAL (MENÚ) --- */
+/* Botón de Publicidad */
+.btn-publicidad {
+    display: inline-block;
+    padding: 8px 12px;
+    margin-top: 10px;
+    background: var(--color-secondary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.btn-publicidad:hover {
+    background: #2563eb;
+}
+
+/* --- ESTILOS DE LA VENTANA MODAL (MENÚ Y PUBLICIDAD) --- */
 
 .modal {
     display: none; 
@@ -486,10 +506,30 @@ header h1 {
     padding: 30px;
     border-radius: 12px;
     width: 90%; 
-    max-width: 700px; 
+    max-width: 700px; /* Tamaño por defecto para el Menú */
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     position: relative;
     animation: fadeIn 0.3s;
+}
+
+/* Clase para la ventana de publicidad (Pequeña) */
+.modal-content.modal-content-promo {
+    width: 90%;
+    max-width: 450px; /* Tamaño reducido para una imagen publicitaria */
+    padding: 20px;
+    text-align: center;
+}
+
+.modal-content-promo #modal-body {
+    padding: 10px 0;
+}
+
+.promo-publicidad-modal-img {
+    max-width: 100%;
+    height: auto;
+    max-height: 400px; /* Limita la altura de la imagen */
+    object-fit: contain; /* Asegura que la imagen completa se vea */
+    border-radius: 6px;
 }
 
 @keyframes fadeIn {

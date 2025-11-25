@@ -65,13 +65,25 @@
     </div>
     
     <div id="menu-modal" class="modal">
-        <div class="modal-content">
+        <div id="modal-content" class="modal-content">
             <span class="close-btn" onclick="cerrarModal()">×</span>
             <h2 id="modal-title">Menú</h2>
             <div id="modal-body"></div>
         </div>
     </div>
     <script>
+    // ELEMENTOS GLOBALES
+    const contenedorRestaurantes = document.getElementById('restaurantes-list');
+    const contenedorPromos = document.getElementById('promos');
+    const contenedorDias = document.getElementById('days');
+    const inputBuscar = document.getElementById('buscar');
+    const modal = document.getElementById('menu-modal');
+    const modalContent = document.getElementById('modal-content');
+    const tabs = document.querySelectorAll(".tab-btn");
+    const views = ["view-inicio", "view-restaurantes", "view-promociones"];
+    const diasSemana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+
+
     // ========= 1. LÓGICA DEL CARRUSEL DE INICIO  =========
     let index = 0;
     let autoPlay;
@@ -129,249 +141,86 @@
 
     // BASE DE DATOS DINÁMICA: HORARIOS ACTUALIZADOS
     const datosRestaurantes = [
-        { 
-            nombre: "Maax Pizza", 
-            alimentos: "Pizza", 
-            horario: {
-                lunes: "10:00 a.m. - 9:00 p.m.",
-                martes: "10:00 a.m. - 9:00 p.m.",
-                miércoles: "10:00 a.m. - 9:00 p.m.",
-                jueves: "10:00 a.m. - 9:00 p.m.",
-                viernes: "10:00 a.m. - 9:00 p.m.",
-                sábado: "10:00 a.m. - 9:00 p.m.",
-                domingo: "10:00 a.m. - 9:00 p.m."
-            }, 
-            telefono: "6395011199", direccion: "https://www.google.com/maps/place/Maax+Pizza/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb13ea59dbacd9:0x9ec9df3af6251db9!8m2!3d28.2682562!4d-105.4801812!16s%2Fg%2F11c5bhq3s5?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "pizza", imagenes: ["img/restaurantes/Maax.jpeg"] 
-        },
-        { 
-            nombre: "Azucar y Sal", 
-            alimentos: "Desayunos", 
-            horario: {
-                lunes: "8:00 a.m. - 9:00 p.m.",
-                martes: "8:00 a.m. - 9:00 p.m.",
-                miércoles: "8:00 a.m. - 9:00 p.m.",
-                jueves: "8:00 a.m. - 9:00 p.m.",
-                viernes: "8:00 a.m. - 9:00 p.m.",
-                sábado: "8:00 a.m. - 9:00 p.m.",
-                domingo: "8:00 a.m. - 1:00 p.m."
-            }, 
-            telefono: "6391118787", direccion: "https://www.google.com/maps/place/Azucar+%26+Sal+Restaurante/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb13e6ee8311e5:0xf4bf2dc693ec2dd1!8m2!3d28.2846521!4d-105.494009!16s%2Fg%2F11fq8tr9s6?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "desayunos", imagenes: ["img/restaurantes/Azucar&sal.jpeg"] 
-        },
-        
-        { 
-            nombre: "Antojitos Lupillo", 
-            alimentos: "Antojitos", 
-            horario: {
-                lunes: "Cerrado",
-                martes: "Cerrado",
-                miércoles: "Cerrado",
-                jueves: "11:00 a.m. - 2:00 a.m.",
-                viernes: "11:00 a.m. - 2:00 a.m.",
-                sábado: "11:00 a.m. - 2:00 a.m.",
-                domingo: "11:00 a.m. - 2:00 a.m."
-            }, 
-            telefono: "6391001187", direccion: "https://www.google.com/maps/place/Antojitos+Lupillo/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb1309540579c3:0xd9e2e5c2d569f8cc!8m2!3d28.2746653!4d-105.4850639!16s%2Fg%2F11h_6fbjq9?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "antojitos", imagenes: ["img/restaurantes/AntojitosLupillo.jpeg"] 
-        },
-        
-        { 
-            nombre: "La Patrona 2020", 
-            alimentos: "Mariscos", 
-            horario: {
-                lunes: "12:00 p.m. - 7:00 p.m.",
-                martes: "12:00 p.m. - 7:00 p.m.",
-                miércoles: "12:00 p.m. - 7:00 p.m.",
-                jueves: "12:00 p.m. - 7:00 p.m.",
-                viernes: "12:00 p.m. - 7:00 p.m.",
-                sábado: "12:00 p.m. - 7:00 p.m.",
-                domingo: "12:00 p.m. - 7:00 p.m."
-            }, 
-            telefono: "6391528113", direccion: "https://www.google.com/maps/place/LA+PATRONA+2020/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb1336dc26ae57:0x8617c70368c72b88!8m2!3d28.2601455!4d-105.4765715!16s%2Fg%2F11j95c_lh1?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "mariscos", imagenes: ["img/restaurantes/LaPatrona.jpeg"] 
-        },
-        { 
-            nombre: "Orsinis Pizzería", 
-            alimentos: "Pizzería", 
-            horario: {
-                lunes: "11:00 a.m. - 10:00 p.m.",
-                martes: "11:00 a.m. - 10:00 p.m.",
-                miércoles: "11:00 a.m. - 10:00 p.m.",
-                jueves: "11:00 a.m. - 10:00 p.m.",
-                viernes: "11:00 a.m. - 10:00 p.m.",
-                sábado: "11:00 a.m. - 10:00 p.m.",
-                domingo: "11:00 a.m. - 10:00 p.m."
-            }, 
-            telefono: "6394730097", direccion: "https://www.google.com/maps/place/Orsinis+Pizzeria+Meoqui/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86ea423558a62e17:0x39b7e12c6c874525!8m2!3d28.2733729!4d-105.4838137!16s%2Fg%2F1tdz0dmv?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "pizza", imagenes: ["img/restaurantes/Orsinis.jpeg"] 
-        },
-        { 
-            nombre: "Comida China Buena Suerte", 
-            alimentos: "Comida China", 
-            horario: {
-                lunes: "12:00 p.m. - 7:30 p.m.",
-                martes: "12:00 p.m. - 7:30 p.m.",
-                miércoles: "12:00 p.m. - 7:30 p.m.",
-                jueves: "12:00 p.m. - 7:30 p.m.",
-                viernes: "12:00 p.m. - 7:30 p.m.",
-                sábado: "12:00 p.m. - 7:30 p.m.",
-                domingo: "12:00 p.m. - 7:30 p.m."
-            }, 
-            telefono: "6391785977", direccion: "https://www.google.com/maps/place/COMIDA+CHINA/@28.2670738,-105.4878193,15z/data=!3m1!4b1!4m6!3m5!1s0x86eb13eb2e138dcf:0x67d776877b544095!8m2!3d28.2670742!4d-105.477541!16s%2Fg%2F11xysxrddm?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "china", imagenes: ["img/restaurantes/Comidachina.jpeg"] 
-        },
-        { 
-            nombre: "Con Todo o que?", 
-            alimentos: "Antojitos", 
-            horario: {
-                lunes: "Cerrado",
-                martes: "Cerrado",
-                miércoles: "Cerrado",
-                jueves: "Cerrado",
-                viernes: "11:00 a.m. - 4:00 p.m.",
-                sábado: "11:00 a.m. - 4:00 p.m.",
-                domingo: "11:00 a.m. - 4:00 p.m."
-            }, 
-            telefono: "6391060040", direccion: "https://www.google.com/maps/place/Estaci%C3%B3n+Consuelo,+Obrera,+33130+Meoqui,+Chih./@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb139694838783:0xc3eca7ea8e1a854d!8m2!3d28.2672531!4d-105.4702183!16s%2Fg%2F11pv9bjnp4?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "antojitos", imagenes: ["img/restaurantes/Contodo.jpeg"] 
-        },
-        { 
-            nombre: "El Borrego de Oro", 
-            alimentos: "Carne/Borrego", 
-            horario: {
-                lunes: "9:00 a.m. - 7:00 p.m.",
-                martes: "10:00 a.m. - 7:00 p.m.",
-                miércoles: "9:00 a.m. - 9:00 p.m.",
-                jueves: "9:00 a.m. - 9:00 p.m.",
-                viernes: "9:00 a.m. - 9:00 p.m.",
-                sábado: "9:00 a.m. - 9:00 p.m.",
-                domingo: "9:00 a.m. - 6:00 p.m."
-            }, 
-            telefono: "6391067930", direccion: "https://www.google.com/maps/place/Taquer%C3%ADa+el+Borregode+Oro+-+Calle+Aldama/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb13c38e3aaaab:0xda3bb82b21712615!8m2!3d28.274711!4d-105.484791!16s%2Fg%2F11c2l1jg10?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "carne", imagenes: ["img/restaurantes/Taqueria.jpeg"] 
-        },
-        { 
-            nombre: "Restaurante Moctezuma", 
-            alimentos: "Mexicana", 
-            horario: {
-                lunes: "8:00 a.m. - 7:00 p.m.",
-                martes: "8:00 a.m. - 7:00 p.m.",
-                miércoles: "8:00 a.m. - 7:00 p.m.",
-                jueves: "8:00 a.m. - 7:00 p.m.",
-                viernes: "8:00 a.m. - 7:00 p.m.",
-                sábado: "8:00 a.m. - 7:00 p.m.",
-                domingo: "8:00 a.m. - 7:00 p.m."
-            }, 
-            telefono: "6391940975", direccion: "https://www.google.com/maps/place/Moctezuma+Restaurante+de+Pescados+y+Mariscos/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb1392ce99c6b5:0x79ce94a69049301b!8m2!3d28.2609761!4d-105.4767439!16s%2Fg%2F11cmtsyn7g?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "mexicana", imagenes: ["img/restaurantes/Moctezuma.jpeg"] 
-        },
-        { 
-            nombre: "Los Ajillos Restaurant", 
-            alimentos: "Mexicana", 
-            horario: {
-                lunes: "7:30 a.m. - 9:00 p.m.",
-                martes: "7:30 a.m. - 9:00 p.m.",
-                miércoles: "7:30 a.m. - 9:00 p.m.",
-                jueves: "7:30 a.m. - 9:00 p.m.",
-                viernes: "7:30 a.m. - 9:00 p.m.",
-                sábado: "7:30 a.m. - 9:00 p.m.",
-                domingo: "7:30 a.m. - 9:00 p.m."
-            }, 
-            telefono: "6391944331", direccion: "https://www.google.com/maps/place/Los+Ajillos+restaurant/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb13000efc049b:0xe8f6d1e0ecd0d98!8m2!3d28.2840094!4d-105.4942204!16s%2Fg%2F11wxmww9z_?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "mexicana", imagenes: ["img/restaurantes/LosAjillos.jpeg"] 
-        },
-        { 
-            nombre: "Mariscos El Rey Culichi", 
-            alimentos: "Mariscos", 
-            horario: {
-                lunes: "10:00 a.m. - 6:30 p.m.",
-                martes: "10:00 a.m. - 6:30 p.m.",
-                miércoles: "10:00 a.m. - 6:30 p.m.",
-                jueves: "10:00 a.m. - 6:30 p.m.",
-                viernes: "10:00 a.m. - 8:30 p.m.",
-                sábado: "10:00 a.m. - 8:30 p.m.",
-                domingo: "10:00 a.m. - 8:30 p.m."
-            }, 
-            telefono: "6391941825", direccion: "https://www.google.com/maps/place/%22MARISCOS+EL+REY+CULICHI%22/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb13c316048083:0x94e144398b84a58c!8m2!3d28.2608993!4d-105.4762436!16s%2Fg%2F11nxt27q3p?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "mariscos", imagenes: ["img/restaurantes/Mariscos.jpeg"] 
-        },
-        { 
-            nombre: "Pizzería La Sierra", 
-            alimentos: "Pizzería", 
-            horario: {
-                lunes: "8:00 a.m. - 9:30 p.m.",
-                martes: "8:00 a.m. - 9:30 p.m.",
-                miércoles: "8:00 a.m. - 9:30 p.m.",
-                jueves: "8:00 a.m. - 9:30 p.m.",
-                viernes: "8:00 a.m. - 9:30 p.m.",
-                sábado: "8:00 a.m. - 9:30 p.m.",
-                domingo: "8:00 a.m. - 9:30 p.m."
-            }, 
-            telefono: "6391920207", direccion: "https://www.google.com/maps/place/Pizzer%C3%ADa+La+Sierra+Meoqui/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb13c485c29fe1:0xf273db6d0bfe5a03!8m2!3d28.2756915!4d-105.4863848!16s%2Fg%2F11c5rrwwq6?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "pizza", imagenes: ["img/restaurantes/LaSierra.jpeg"] 
-        },
-        { 
-            nombre: "Area 639 Hotdogs", 
-            alimentos: "Hotdogs", 
-            horario: {
-                lunes: "6:00 p.m. - 1:30 a.m.",
-                martes: "Cerrado",
-                miércoles: "6:00 p.m. - 1:30 a.m.",
-                jueves: "6:00 p.m. - 1:30 a.m.",
-                viernes: "6:00 p.m. - 1:30 a.m.",
-                sábado: "6:00 p.m. - 3:00 a.m.",
-                domingo: "6:00 p.m. - 1:30 a.m."
-            }, 
-            telefono: "6392305101", direccion: "https://www.google.com/maps/place/%C3%81rea+639+Hotdogs/@28.2636331,-105.4810745,17.5z/data=!4m6!3m5!1s0x86eb1300299ddc6f:0x3ad7ee49d829144a!8m2!3d28.2635884!4d-105.4794082!16s%2Fg%2F11wfvj3m6f?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "hotdogs", imagenes: ["img/restaurantes/HotDogs.jpeg"] 
-        }
+        { nombre: "Maax Pizza", alimentos: "Pizza", horario: {lunes: "10:00 a.m. - 9:00 p.m.", martes: "10:00 a.m. - 9:00 p.m.", miércoles: "10:00 a.m. - 9:00 p.m.", jueves: "10:00 a.m. - 9:00 p.m.", viernes: "10:00 a.m. - 9:00 p.m.", sábado: "10:00 a.m. - 9:00 p.m.", domingo: "10:00 a.m. - 9:00 p.m."}, telefono: "📞6395011199", direccion: "https://www.google.com/maps/place/Maax+Pizza/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb13ea59dbacd9:0x9ec9df3af6251db9!8m2!3d28.2682562!4d-105.4801812!16s%2Fg%2F11c5bhq3s5?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "pizza", imagenes: ["img/restaurantes/Maax.jpeg"] },
+        { nombre: "Azucar y Sal", alimentos: "Desayunos", horario: {lunes: "8:00 a.m. - 9:00 p.m.", martes: "8:00 a.m. - 9:00 p.m.", miércoles: "8:00 a.m. - 9:00 p.m.", jueves: "8:00 a.m. - 9:00 p.m.", viernes: "8:00 a.m. - 9:00 p.m.", sábado: "8:00 a.m. - 9:00 p.m.", domingo: "8:00 a.m. - 1:00 p.m."}, telefono: "📞6391118787", direccion: "https://www.google.com/maps/place/Azucar+%26+Sal+Restaurante/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb13e6ee8311e5:0xf4bf2dc693ec2dd1!8m2!3d28.2846521!4d-105.494009!16s%2Fg%2F11fq8tr9s6?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "desayunos", imagenes: ["img/restaurantes/Azucar&sal.jpeg"] },
+        { nombre: "Antojitos Lupillo", alimentos: "Antojitos", horario: {lunes: "Cerrado", martes: "Cerrado", miércoles: "Cerrado", jueves: "11:00 a.m. - 2:00 a.m.", viernes: "11:00 a.m. - 2:00 a.m.", sábado: "11:00 a.m. - 2:00 a.a.m.", domingo: "11:00 a.m. - 2:00 a.a.m."}, telefono: "📞6391001187", direccion: "https://www.google.com/maps/place/Antojitos+Lupillo/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb1309540579c3:0xd9e2e5c2d569f8cc!8m2!3d28.2746653!4d-105.4850639!16s%2Fg%2F11h_6fbjq9?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "antojitos", imagenes: ["img/restaurantes/AntojitosLupillo.jpeg"] },
+        { nombre: "La Patrona 2020", alimentos: "Mariscos", horario: {lunes: "12:00 p.m. - 7:00 p.m.", martes: "12:00 p.m. - 7:00 p.m.", miércoles: "12:00 p.m. - 7:00 p.m.", jueves: "12:00 p.m. - 7:00 p.p.m.", viernes: "12:00 p.m. - 7:00 p.p.m.", sábado: "12:00 p.m. - 7:00 p.p.m.", domingo: "12:00 p.m. - 7:00 p.p.m."}, telefono: "📞6391528113", direccion: "https://www.google.com/maps/place/LA+PATRONA+2020/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb1336dc26ae57:0x8617c70368c72b88!8m2!3d28.2601455!4d-105.4765715!16s%2Fg%2F11j95c_lh1?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "mariscos", imagenes: ["img/restaurantes/LaPatrona.jpeg"] },
+        { nombre: "Orsinis Pizzería", alimentos: "Pizzería", horario: {lunes: "11:00 a.m. - 10:00 p.m.", martes: "11:00 a.m. - 10:00 p.m.", miércoles: "11:00 a.m. - 10:00 p.m.", jueves: "11:00 a.m. - 10:00 p.m.", viernes: "11:00 a.m. - 10:00 p.p.m.", sábado: "11:00 a.m. - 10:00 p.p.m.", domingo: "11:00 a.m. - 10:00 p.p.m."}, telefono: "📞6394730097", direccion: "https://www.google.com/maps/place/Orsinis+Pizzeria+Meoqui/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86ea423558a62e17:0x39b7e12c6c874525!8m2!3d28.2733729!4d-105.4838137!16s%2Fg%2F1tdz0dmv?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "pizza", imagenes: ["img/restaurantes/Orsinis.jpeg"] },
+        { nombre: "Comida China Buena Suerte", alimentos: "Comida China", horario: {lunes: "12:00 p.m. - 7:30 p.m.", martes: "12:00 p.m. - 7:30 p.m.", miércoles: "12:00 p.p.m. - 7:30 p.p.m.", jueves: "12:00 p.p.m. - 7:30 p.p.m.", viernes: "12:00 p.p.m. - 7:30 p.p.m.", sábado: "12:00 p.p.m. - 7:30 p.p.m.", domingo: "12:00 p.p.m. - 7:30 p.p.m."}, telefono: "📞6391785977", direccion: "https://www.google.com/maps/place/COMIDA+CHINA/@28.2670738,-105.4878193,15z/data=!3m1!4b1!4m6!3m5!1s0x86eb13eb2e138dcf:0x67d776877b544095!8m2!3d28.2670742!4d-105.477541!16s%2Fg%2F11xysxrddm?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "china", imagenes: ["img/restaurantes/Comidachina.jpeg"] },
+        { nombre: "Con Todo o que?", alimentos: "Antojitos", horario: {lunes: "Cerrado", martes: "Cerrado", miércoles: "Cerrado", jueves: "Cerrado", viernes: "11:00 a.m. - 4:00 p.m.", sábado: "11:00 a.m. - 4:00 p.m.", domingo: "11:00 a.m. - 4:00 p.m."}, telefono: "📞6391060040", direccion: "https://www.google.com/maps/place/Estaci%C3%B3n+Consuelo,+Obrera,+33130+Meoqui,+Chih./@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb139694838783:0xc3eca7ea8e1a854d!8m2!3d28.2672531!4d-105.4702183!16s%2Fg%2F11pv9bjnp4?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "antojitos", imagenes: ["img/restaurantes/Contodo.jpeg"] },
+        { nombre: "El Borrego de Oro", alimentos: "Carne/Borrego", horario: {lunes: "9:00 a.m. - 7:00 p.m.", martes: "10:00 a.m. - 7:00 p.p.m.", miércoles: "9:00 a.m. - 9:00 p.p.m.", jueves: "9:00 a.m. - 9:00 p.p.m.", viernes: "9:00 a.m. - 9:00 p.p.m.", sábado: "9:00 a.m. - 9:00 p.p.m.", domingo: "9:00 a.m. - 6:00 p.m."}, telefono: "📞6391067930", direccion: "https://www.google.com/maps/place/Taquer%C3%ADa+el+Borregode+Oro+-+Calle+Aldama/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb13c38e3aaaab:0xda3bb82b21712615!8m2!3d28.274711!4d-105.484791!16s%2Fg%2F11c2l1jg10?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "carne", imagenes: ["img/restaurantes/Taqueria.jpeg"] },
+        { nombre: "Restaurante Moctezuma", alimentos: "Mexicana", horario: {lunes: "8:00 a.m. - 7:00 p.p.m.", martes: "8:00 a.m. - 7:00 p.p.m.", miércoles: "8:00 a.m. - 7:00 p.p.m.", jueves: "8:00 a.m. - 7:00 p.p.m.", viernes: "8:00 a.m. - 7:00 p.p.m.", sábado: "8:00 a.m. - 7:00 p.p.m.", domingo: "8:00 a.m. - 7:00 p.p.m."}, telefono: "📞6391940975", direccion: "https://www.google.com/maps/place/Moctezuma+Restaurante+de+Pescados+y+Mariscos/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb1392ce99c6b5:0x79ce94a69049301b!8m2!3d28.2609761!4d-105.4767439!16s%2Fg%2F11cmtsyn7g?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "mexicana", imagenes: ["img/restaurantes/Moctezuma.jpeg"] },
+        { nombre: "Los Ajillos Restaurant", alimentos: "Mexicana", horario: {lunes: "7:30 a.m. - 9:00 p.p.m.", martes: "7:30 a.m. - 9:00 p.p.m.", miércoles: "7:30 a.m. - 9:00 p.p.m.", jueves: "7:30 a.m. - 9:00 p.p.m.", viernes: "7:30 a.m. - 9:00 p.p.m.", sábado: "7:30 a.m. - 9:00 p.p.m.", domingo: "7:30 a.m. - 9:00 p.p.m."}, telefono: "📞6391944331", direccion: "https://www.google.com/maps/place/Los+Ajillos+restaurant/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb13000efc049b:0xe8f6d1e0ecd0d98!8m2!3d28.2840094!4d-105.4942204!16s%2Fg%2F11wxmww9z_?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "mexicana", imagenes: ["img/restaurantes/LosAjillos.jpeg"] },
+        { nombre: "Mariscos El Rey Culichi", alimentos: "Mariscos", horario: {lunes: "10:00 a.m. - 6:30 p.m.", martes: "10:00 a.m. - 6:30 p.m.", miércoles: "10:00 a.m. - 6:30 p.p.m.", jueves: "10:00 a.m. - 6:30 p.p.m.", viernes: "10:00 a.m. - 8:30 p.p.m.", sábado: "10:00 a.m. - 8:30 p.p.m.", domingo: "10:00 a.m. - 8:30 p.p.m."}, telefono: "📞6391941825", direccion: "https://www.google.com/maps/place/%22MARISCOS+EL+REY+CULICHI%22/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb13c316048083:0x94e144398b84a58c!8m2!3d28.2608993!4d-105.4762436!16s%2Fg%2F11nxt27q3p?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "mariscos", imagenes: ["img/restaurantes/Mariscos.jpeg"] },
+        { nombre: "Pizzería La Sierra", alimentos: "Pizzería", horario: {lunes: "8:00 a.m. - 9:30 p.m.", martes: "8:00 a.m. - 9:30 p.p.m.", miércoles: "8:00 a.m. - 9:30 p.p.m.", jueves: "8:00 a.m. - 9:30 p.p.m.", viernes: "8:00 a.m. - 9:30 p.p.m.", sábado: "8:00 a.m. - 9:30 p.p.m.", domingo: "8:00 a.m. - 9:30 p.p.m."}, telefono: "📞6391920207", direccion: "https://www.google.com/maps/place/Pizzer%C3%ADa+La+Sierra+Meoqui/@28.4579481,-106.1355562,10z/data=!4m6!3m5!1s0x86eb13c485c29fe1:0xf273db6d0bfe5a03!8m2!3d28.2756915!4d-105.4863848!16s%2Fg%2F11c5rrwwq6?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "pizza", imagenes: ["img/restaurantes/LaSierra.jpeg"] },
+        { nombre: "Area 639 Hotdogs", alimentos: "Hotdogs", horario: {lunes: "6:00 p.m. - 1:30 a.m.", martes: "Cerrado", miércoles: "6:00 p.m. - 1:30 a.m.", jueves: "6:00 p.m. - 1:30 a.m.", viernes: "6:00 p.p.m. - 1:30 a.m.", sábado: "6:00 p.p.m. - 3:00 a.m.", domingo: "6:00 p.p.m. - 1:30 a.m."}, telefono: "📞6392305101", direccion: "https://www.google.com/maps/place/%C3%81rea+639+Hotdogs/@28.2636331,-105.4810745,17.5z/data=!4m6!3m5!1s0x86eb1300299ddc6f:0x3ad7ee49d829144a!8m2!3d28.2635884!4d-105.4794082!16s%2Fg%2F11wfvj3m6f?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D", comida: "hotdogs", imagenes: ["img/restaurantes/HotDogs.jpeg"] }
     ];
 
     // DATOS DEL MENÚ 
-    const datosMenu = { 
-        "Maax Pizza": `<h4>Pizzas (Grande)</h4><ul><li>Pizza de 1 Ingrediente: MXN 120.00</li><li>Pizza Mexicana (Frijol, jalapeños, cebolla, salchicha, chorizo): MXN 175.00</li><li>Pizza Pastorera: MXN 185.00</li><li>Pizza Especial Max (Jamón, salami, champiñones, cebolla, etc.): MXN 185.00</li></ul><h4>Adicionales</h4><ul><li>Baguette Mexicano: MXN 80.00</li><li>Orden de papas gajo: MXN 45.00</li></ul>`,
-        "Azucar y Sal": `<h4>Panadería y Desayunos</h4><ul><li>Chilaquiles y Enchiladas.</li><li>Emparedados, Baguette, Chapatas.</li><li>Panadería (Azúcar y Sal).</li><li>Bebidas Frías y Calientes.</li><li>Repostería (Pasteles y Postres).</li></ul>`,
-        "Antojitos Lupillo": `<h4>Desayunos Caseros</h4><ul><li>Chilaquiles con Pollo / Huevo / Mixtos: $120.00 - $130.00</li><li>Huevo con Chorizo / Jamón / Papa / a la Mexicana: $110.00 - $120.00</li><li>Omelette de Jamón o a la Mexicana: $120.00</li></ul><h4>Comidas Caseras</h4><ul><li>Milanesa de Pollo o Res Empanizada: $130.00</li><li>Enchiladas Suizas: $130.00</li><li>Bistec a la Mexicana: $140.00</li></ul>`,
-        "La Patrona 2020": `<h4>Mariscos y Carnes</h4><p>Se encontraron diferentes menús para La Patrona, incluyendo tacos de sirloin, hamburguesas, flautas y sopes. El menú puede variar por sucursal.</p><ul><li>Orden de 4 Tacos de Sirloin asado al carbón.</li><li>Hamburguesa de sirloin.</li><li>Flautas de pollo o papa.</li><li>Chilaquiles rellenos.</li></ul>`,
-        "Orsinis Pizzería": `<h4>Pizzas y Pastas (Precios de referencia)</h4><ul><li>Pizza Hawaiana: MX$99.00</li><li>Pizza Mediana 11": MX$179.00</li><li>Pizza Grande 13": MX$238.00</li><li>Orsinis Especial (Jamón, salami, chorizo, champiñón, etc.): MX$111.00</li><li>Spaguetti Bolognese: MX$121.00</li><li>Fettuccine Alfredo: MX$123.00</li></ul>`,
-        "Comida China Buena Suerte": `<h4>Paquetes y Platillos (Precios de referencia)</h4><ul><li>Paquete Chico Arroz + Guiso: $ 99.00</li><li>Paquete 3 Guisos + Acompañamiento: $ 160.00</li><li>Arroz / Espagueti: $ 74.00 (Porción generosa)</li><li>Pollo Agridulce / Pollo Empanizado / Res con Brócoli: $ 81.00 - $87.00</li></ul>`,
-        "Con Todo o que?": `<p style="text-align:center;">**Menú no disponible en línea.** Por favor, contacte directamente al restaurante para consultar sus opciones.</p>`,
-        "El Borrego de Oro": `<h4>Tacos y Burritos (Precios de referencia)</h4><ul><li>Orden de Tacos Bistec de Res (4 tacos): $100.00</li><li>Burrito de Bistec de Res (30cm): $120.00</li><li>Orden de Tacos Combinados (Res y Puerco): $100.00</li><li>Orden de Tacos Barbacoa de Puerco: $100.00</li></ul>`,
-        "Restaurante Moctezuma": `<h4>Hamburguesas y Cortes (Precios de referencia)</h4><ul><li>Patata Bacon Burger / La 4 Quesos: $175 - $195</li><li>Hamburguesa BALBOA (300g Sirloin, doble queso, panela, piña): $199</li><li>Rib Eye 500g / Arrachera 300g (Cortes a la Parrilla)</li><li>Parrillada Sonora (1.5 Kg de varias carnes): $1,650</li></ul>`,
-        "Los Ajillos Restaurant": `<p style="text-align:center;">**Menú no disponible en línea.** Por favor, contacte directamente al restaurante para consultar sus opciones.</p>`,
-        "Mariscos El Rey Culichi": `<h4>Especialidades (Precios de referencia en USD, pueden variar)</h4><ul><li>La Torre de Mariscos: $27.99</li><li>La Botana Placosa: $27.99</li><li>Aguachiles Negros o Verdes: $19.99</li><li>Taco de Camarón / Pescado: $3.99 +</li><li>Quesadilla de Camarón: $12.99 +</li></ul>`,
-        "Pizzería La Sierra": `<h4>Pizzas y Más</h4><ul><li>Pizza La Sierra (Salami, pepperoni, champiñones, etc.)</li><li>Pizza Hawaiana / Ranchera / Carne Asada / Pollo BBQ.</li><li>Hamburguesa La Sierra (Res, queso, jamón, piña).</li><li>Complementos: Papas Nachos, Papas Francesas, Alitas.</li><li>Desayunos & Hot Cakes.</li></ul>`,
-        "Area 639 Hotdogs": `<p style="text-align:center;">**Menú no disponible en el snippet de búsqueda.** El restaurante se especializa en Hotdogs, por favor, contacte para más detalles.</p>`
-    };
+    const datosMenu = {};
 
-    const datosPromos = [ 
-        { restaurante: "Maax Pizza", promo: "¡La promo clásica! 2 pizza grandes a $299.", dia: "Todos los Días" },
-        { restaurante: "Azucar y Sal", promo: "Desayuno completo: Chilaquiles + Café + Jugo por $120.", dia: "Lunes" },
-        { restaurante: "Mariscos La Patrona 2020", promo: "2x1 en tacos de camarón y pescado.", dia: "Viernes" },
-        { restaurante: "Orsinis Pizzería", promo: "Pizza familiar de un ingrediente + refresco 2L por $250.", dia: "Domingo" },
-        { restaurante: "Area 639 Hotdogs", promo: "Hotdog gigante + papas + agua por $90.", dia: "Miércoles" },
-        { restaurante: "El Borrego de Oro", promo: "20% de descuento en barbacoa para llevar.", dia: "Domingo" }
+    // DATOS DE PROMOCIONES REALES
+    const datosPromos = [
+        // Maax Pizza (Todos los Días)
+        { restaurante: "Maax Pizza", promo: "● pizza grande por $145.00<br>1 pizza familiar por $160.00<br>●2 pizzas grandes por $269.00<br>●2 pizzas familiares por $299.00", dia: "Todos los Días" },
+
+        // Azucar y Sal
+        { restaurante: "Azucar y Sal", promo: "●Ensaladas 2x1", dia: "Martes" },
+        { restaurante: "Azucar y Sal", promo: "●Hamburguesa sencilla, papas y refresco por $98.00", dia: "Miércoles" },
+
+        // Restaurante Moctezuma
+        { restaurante: "Restaurante Moctezuma", promo: "●Caldo de pescado chico con filete empanizado por $160 (incluye refresco en comedor)<br>●1 kilo de filete empanizado por $240.00", dia: "Miércoles" },
+        { restaurante: "Restaurante Moctezuma", promo: "●3 hamburguesas por $150.00", dia: "Viernes" },
+
+        // La Patrona 2020 - AÑADIDA IMAGEN
+        { restaurante: "La Patrona 2020", promo: "●Caldo de pescado chico 2x1", dia: "Lunes", imagen: "img/Promos/PLunes.jpeg" },
+        { restaurante: "La Patrona 2020", promo: "●Tacos Gobernador y Morelianos 3x2", dia: "Martes", imagen: "img/Promos/PMartes.jpeg" },
+        { restaurante: "La Patrona 2020", promo: "●Tostadas de Pescado y Atún 2 por $175.00<br>●Tostadas de Camarón 2 por $189.00", dia: "Miércoles", imagen: "img/Promos/PMiercoles.jpeg" },
+        { restaurante: "La Patrona 2020", promo: "●Cerveza Nacional de 1/2 a $25.00<br>●2 Caguamas a Solo $100.00", dia: "Viernes", imagen: "img/Promos/PViernes.jpeg" },
+        { restaurante: "La Patrona 2020", promo: "●Cerveza Nacional de 1/4 a $10.00", dia: "Sábado", imagen: "img/Promos/PSabado.jpeg" },
+
+        // Orsinis Pizzería
+        { restaurante: "Orsinis Pizzería", promo: "●Pizza Suprema con papas a la francesa o refresco de regalo por $245.00<br>●Pizza grande (mitad peperoni, mitad jamón, peperoni y pimiento morrón) por $159.00<br>●Pizza grande de 3 ingredientes a elegir + espagueti boloñés mediano de regalo por $219.00", dia: "Todos los Días" },
+        { restaurante: "Orsinis Pizzería", promo: "●2x1 en pizzas (consultar restricciones y si el precio del menú cambia)", dia: "Martes" },
+        { restaurante: "Orsinis Pizzería", promo: "●2x1 en pizzas (consultar restricciones y si el precio del menú cambia)", dia: "Jueves" },
+
+        // El Borrego de Oro
+        { restaurante: "El Borrego de Oro", promo: "●Tacos 2x1 por $120.00", dia: "Miércoles" },
+        
+        // Los Ajillos Restaurant (Todos los Días)
+        { restaurante: "Los Ajillos Restaurant", promo: "●Boneless en cualquier salsa + refresco por $120.00", dia: "Todos los Días" },
+        
+        // Mariscos El Rey Culichi
+        { restaurante: "Mariscos El Rey Culichi", promo: "●1 platillo, 1 tostada y 1 bebida por $250.00<br>●1 platillo, 1 caldo chico y 1 bebida por $170.00", dia: "Lunes" },
+        { restaurante: "Mariscos El Rey Culichi", promo: "●Caldos 2x1", dia: "Martes" },
+        { restaurante: "Mariscos El Rey Culichi", promo: "●Primer bebida a $1.00", dia: "Miércoles" },
+        { restaurante: "Mariscos El Rey Culichi", promo: "●Tostadas y tacos 2 por $99.00", dia: "Jueves" },
+        
+        // Pizzería La Sierra
+        { restaurante: "Pizzería La Sierra", promo: "●Pizza grande de peperoni por $129.00", dia: "Lunes" }
     ];
 
-    // Elementos del DOM
-    const contenedorRestaurantes = document.getElementById('restaurantes-list');
-    const inputBuscar = document.getElementById('buscar');
-    const modal = document.getElementById('menu-modal');
-    const tabs = document.querySelectorAll(".tab-btn");
-    const views = ["view-inicio", "view-restaurantes", "view-promociones"];
-    const diasSemana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    // FUNCIÓN PARA OBTENER DATOS DEL RESTAURANTE 
+    function obtenerDatosRestaurante(nombre) {
+        const nombreLimpio = nombre.trim().toLowerCase();
+        return datosRestaurantes.find(r => r.nombre.toLowerCase() === nombreLimpio) || null;
+    }
 
-    // --- LÓGICA DE HORARIO Y ESTADO ---
-    
+    // --- LÓGICA DE HORARIO Y ESTADO  ---
     function convertirA_Minutos(horaStr) {
         if (!horaStr || horaStr.toLowerCase().includes('n/a')) return -1;
         
-        // 1. Limpia puntos y comas globales para estandarizar el string (Ej: "8:00 a.m." -> "8:00 am")
         const horaLimpia = horaStr.replace(/[.,]/g, '').trim(); 
-        
-        // 2. Separa el tiempo (HH:MM) del indicador AM/PM
         const partes = horaLimpia.split(/([ap]\.?m\.?)/i).map(s => s.trim()).filter(s => s);
 
         if (partes.length < 2) return -1;
         
         let [tiempo, ampm] = partes;
-        
-        // ampm ahora es 'am' o 'pm' (sin puntos, gracias a la limpieza en horaLimpia)
         ampm = ampm.toLowerCase().replace('.', ''); 
 
         let [horas, minutos] = tiempo.split(':').map(Number);
-        if (isNaN(minutos)) minutos = 0; // Si no hay minutos (ej: "10am"), se asume 0
+        if (isNaN(minutos)) minutos = 0;
 
-        // CORRECCIÓN: Se cambia la comparación de 'p.m' a 'pm' y de 'a.m' a 'am' 
-        // para que coincida con el valor limpiado de la variable 'ampm'.
         if (ampm === 'pm' && horas !== 12) {
             horas += 12;
         } else if (ampm === 'am' && horas === 12) {
@@ -392,7 +241,6 @@
         const horarioHoyStr = horarioData[diaActual];
 
         if (horarioHoyStr.toLowerCase().includes('cerrado')) {
-            // Buscamos cuándo abre el día siguiente si el horario de hoy es 'Cerrado'
             let mensaje = 'Cerrado hoy';
             for (let i = 1; i <= 7; i++) {
                 const diaSiguiente = diasSemana[(ahora.getDay() + i) % 7];
@@ -403,6 +251,8 @@
                         mensaje = `Abre el ${diaSiguiente.charAt(0).toUpperCase() + diaSiguiente.slice(1)} a las ${partesProx[0]}`;
                     }
                     break;
+                } else if (i === 7) {
+                    mensaje = 'Cerrado permanentemente';
                 }
             }
             return { estado: 'Cerrado', mensaje: mensaje };
@@ -425,11 +275,9 @@
 
         let minutosActualesAjustados = minutosActuales;
 
-        // Manejo de horarios que pasan de medianoche (Ej: 6:00 p.m. - 1:30 a.m.)
         if (cierreMin < aperturaMin) {
             cierreMin += 24 * 60; 
             
-            // Si la hora actual es antes de la apertura (pero después de medianoche)
             if (minutosActuales >= 0 && minutosActuales < aperturaMin) {
                 minutosActualesAjustados += 24 * 60;
             }
@@ -438,33 +286,11 @@
         if (minutosActualesAjustados >= aperturaMin && minutosActualesAjustados < cierreMin) {
             return { estado: 'Abierto', mensaje: `Cierra a las ${horaCierreStr}` };
         } else {
-            // Buscamos la hora de apertura del día siguiente si ya cerró hoy
-            let mensajeApertura = `Abre hoy a las ${horaAperturaStr}`;
+            let mensajeApertura = `Cerrado`;
             
-            // Si ya pasó la hora de cierre de hoy (o si cerró y estamos a la medianoche)
             if (minutosActuales >= cierreMin) {
-                
-                // Si el horario de hoy terminó después de medianoche, ya está cerrado hasta mañana.
-                if (cierreMin > 24 * 60) {
-                    mensajeApertura = `Cerrado hasta mañana`;
-                } else {
-                     // Si cerró a una hora normal, buscamos el próximo día de apertura
-                    for (let i = 1; i <= 7; i++) {
-                        const diaSiguiente = diasSemana[(ahora.getDay() + i) % 7];
-                        const horarioDiaSiguiente = horarioData[diaSiguiente];
-                        if (!horarioDiaSiguiente.toLowerCase().includes('cerrado')) {
-                            const partesProx = horarioDiaSiguiente.split(' - ');
-                            if (partesProx.length === 2) {
-                                mensajeApertura = `Abre el ${diaSiguiente.charAt(0).toUpperCase() + diaSiguiente.slice(1)} a las ${partesProx[0]}`;
-                            }
-                            break;
-                        } else if (i === 7) {
-                            mensajeApertura = 'Cerrado permanentemente o por la semana';
-                        }
-                    }
-                }
-            } else if (minutosActuales < aperturaMin) {
-                // Si aún no abre hoy
+                mensajeApertura = `Cerrado`;
+            } else if (minutosActuales < aperturaMin) { 
                 mensajeApertura = `Abre hoy a las ${horaAperturaStr}`;
             }
 
@@ -473,18 +299,37 @@
     }
 
     // --- FIN LÓGICA DE HORARIO Y ESTADO ---
-    
-    // UI: Funciones del Modal
+
+    // UI: Funciones del Modal 
     function mostrarMenu(nombreRestaurante) { 
+        // Limpiamos estilos de imagen por si el modal se usó para una promo
+        modalContent.classList.remove('modal-content-promo');
+
         const menuHTML = datosMenu[nombreRestaurante] || '<p>Menú no encontrado.</p>';
         document.getElementById('modal-title').textContent = `Menú de ${nombreRestaurante}`;
         document.getElementById('modal-body').innerHTML = menuHTML;
         modal.style.display = 'block';
     }
     window.mostrarMenu = mostrarMenu;
+    
+    // NUEVA FUNCIÓN: Mostrar publicidad
+    function mostrarPublicidad(restaurante, imagenSrc) {
+        // Ajustamos el tamaño del modal para la imagen
+        modalContent.classList.add('modal-content-promo');
+
+        const imagenHtml = `<img src="${imagenSrc}" alt="Promoción de ${restaurante}" class="promo-publicidad-modal-img">`;
+        
+        document.getElementById('modal-title').textContent = `Promoción: ${restaurante}`;
+        document.getElementById('modal-body').innerHTML = imagenHtml;
+        modal.style.display = 'block';
+    }
+    window.mostrarPublicidad = mostrarPublicidad;
+
 
     function cerrarModal() { 
         modal.style.display = 'none';
+        // Quitamos la clase de tamaño al cerrar
+        modalContent.classList.remove('modal-content-promo');
     }
     window.cerrarModal = cerrarModal;
 
@@ -506,6 +351,9 @@
         if (vista === 'restaurantes' && contenedorRestaurantes.innerHTML === '') {
              filtrar();
         }
+        if (vista === 'promociones' && contenedorDias.innerHTML === '') {
+             renderizarSelectorDias();
+        }
     }
     
     // RENDERIZAR RESTAURANTES 
@@ -525,16 +373,14 @@
                 </div>
             ` : `<div class="carousel" data-idx="${indice}"><div class="no-img-placeholder">Sin imagen disponible</div></div>`;
 
-            const textoDireccion = rest.direccion === 'N/A' || rest.direccion === '' ? 'N/D' : 'Ver Ubicación';
+            const textoDireccion = rest.direccion === 'N/A' || rest.direccion === '' ? 'N/D' : '📍Ver Ubicación';
             const direccionHTML = (rest.direccion === 'N/A' || rest.direccion === '') 
                                     ? 'N/D' 
                                     : `<a href="${rest.direccion}" target="_blank">${textoDireccion}</a>`;
 
-            // Lógica del Estado
             const estado = determinarEstado(rest.horario);
             const estadoClase = estado.estado === 'Abierto' ? 'estado-abierto' : (estado.estado === 'Cerrado' ? 'estado-cerrado' : 'estado-desconocido');
 
-            // Lógica del Horario Detallado (PARA EL DESPLEGABLE)
             const esHorarioDetallado = typeof rest.horario === 'object';
             let htmlDetalleHorario = '';
 
@@ -546,7 +392,6 @@
                 
                 const toggleID = `detalle-${indice}`;
                 
-                // MOSTRAR ESTADO + HORA ACTUAL + FLECHA DESPLEGABLE
                 htmlDetalleHorario = `
                     <p class="horario-toggle" onclick="toggleHorario('${toggleID}', this)">
                         <span class="${estadoClase}">● ${estado.estado}</span> ${estado.mensaje} <span class="arrow">▼</span>
@@ -556,7 +401,6 @@
                     </div>
                 `;
             } else {
-                // FALLBACK si el horario no es objeto (aunque ya todos lo son)
                 htmlDetalleHorario = `
                     <p><strong>Horario:</strong> ${rest.horario || 'N/A'}</p>
                     <p><span class="${estadoClase}">● ${estado.estado}</span> (${estado.mensaje})</p>
@@ -571,7 +415,8 @@
                             <div>
                                 <h3 class="rest-title-clickable" onclick="mostrarMenu('${rest.nombre.replace(/'/g, "\\'")}')">${rest.nombre}</h3>
                                 <p><strong>Tipo:</strong> ${rest.comida || rest.alimentos || 'N/A'}</p>
-                                ${htmlDetalleHorario} <p><strong>Tel:</strong> ${rest.telefono || 'N/A'}</p>
+                                ${htmlDetalleHorario} 
+                                <p><strong>Tel:</strong> ${rest.telefono || 'N/A'}</p>
                                 <p><strong>Dirección:</strong> ${direccionHTML}</p>
                             </div>
                         </div>
@@ -647,7 +492,7 @@
         });
     }
 
-    // PROMOCIONES POR DÍA 
+    // PROMOCIONES POR DÍA (Lógica de agrupación final)
     const ordenDias = ['Todos', 'Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
     let promosAgrupadasPorDia = {};
     let diaSeleccionado = 'Todos';
@@ -658,17 +503,16 @@
 
         datosPromos.forEach(promo => {
             const diaRaw = (promo.dia || '').toLowerCase();
+            const esPermanente = diaRaw.includes('todos');
 
-            if (diaRaw.includes('todos')) { promosAgrupadasPorDia['Todos'].push(promo); } 
-            else {
-                let coincidencias = false;
+            if (esPermanente) {
+                promosAgrupadasPorDia['Todos'].push(promo); 
+            } else {
                 ordenDias.slice(1).forEach(dia => {
                     if (diaRaw.includes(dia.toLowerCase().substring(0, 3))) {
                         promosAgrupadasPorDia[dia].push(promo);
-                        coincidencias = true;
                     }
                 });
-                if (!coincidencias && !diaRaw.includes('todos')) { promosAgrupadasPorDia['Todos'].push(promo); }
             }
         });
     }
@@ -688,17 +532,9 @@
     }
     window.renderizarSelectorDias = renderizarSelectorDias;
 
-    function renderizarPromosPorDia(dia) { 
-        const promosPermanentes = datosPromos.filter(p => (p.dia || '').toLowerCase().includes('todos'));
-        let listaPromos = [];
+    function renderizarPromosPorDia(dia) {
+        let listaPromos = promosAgrupadasPorDia[dia] || [];
         
-        if (dia === 'Todos') {
-            listaPromos = promosAgrupadasPorDia['Todos'];
-        } else {
-            const promosDiaEspecifico = (promosAgrupadasPorDia[dia] || []);
-            listaPromos = [...new Set([...promosPermanentes, ...promosDiaEspecifico])];
-        }
-
         if (!listaPromos || listaPromos.length === 0) {
             contenedorPromos.innerHTML = `<div class="promo-card promo-message"><p>No hay promociones disponibles para **${dia}**.</p></div>`;
             return;
@@ -706,11 +542,31 @@
 
         contenedorPromos.innerHTML = listaPromos.map(promo => {
             const esPermanente = (promo.dia || '').toLowerCase().includes('todos');
+            const datosRest = obtenerDatosRestaurante(promo.restaurante);
+            
+            const telefono = datosRest ? datosRest.telefono : 'N/D';
+            const direccionLink = datosRest && datosRest.direccion && datosRest.direccion !== 'N/A' 
+                                  ? `<a href="${datosRest.direccion}" target="_blank">Dirección</a>`
+                                  : `Dirección: N/D`;
+
+            // Lógica para el botón "Ver Promoción"
+            let botonPublicidadHtml = '';
+            if (promo.imagen) {
+                 // Usamos el nombre y la ruta para pasarlos a la función mostrarPublicidad
+                 const nombreEscape = promo.restaurante.replace(/'/g, "\\'");
+                 botonPublicidadHtml = `<button class="btn btn-publicidad" onclick="mostrarPublicidad('${nombreEscape}', '${promo.imagen}')">Ver promoción</button>`;
+            }
+
             return `
                 <div class="promo-card ${esPermanente ? 'promo-permanent' : ''}">
                     <h3>${promo.restaurante}</h3>
                     <p class="promo-day-label">**${promo.dia}**</p>
                     <p>${promo.promo}</p>
+                    ${botonPublicidadHtml}
+                    <div style="margin-top: 10px; padding-top: 5px; border-top: 1px dashed #fcd34d;">
+                        <p style="font-size: 0.85rem;">${telefono}</p>
+                        <p style="font-size: 0.85rem;">📍 ${direccionLink}</p>
+                    </div>
                 </div>
             `;
         }).join('');
