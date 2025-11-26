@@ -1255,11 +1255,33 @@ header h1 {
     color: var(--color-primary);
     text-decoration: underline;
 }
-/* logo en el fondo */
-body {
-    background-image: url("img/Logo.jpg");
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 40%;   /* para el tamaño */
-    opacity: 1;
+
+/* Marca de agua en todo el fondo */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("img/logo.png") no-repeat center center;
+  background-size: 40%;       /* Ajusta el tamaño de la marca de agua */
+  opacity: 0.08;             /* Transparencia suave */
+  pointer-events: none;      /* No interfiere con clics/contenido */
+  z-index: -1;               /* Para que quede detrás de todo */
+}
+
+/* Estilo del header con franja azul y logo a la izquierda */
+.site-header {
+  background-color: #005fbd;  /* color azul, ajustalo si quieres otro */
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  gap: 15px;                  /* espacio entre logo y texto */
+}
+
+.logo-header {
+  height: 50px;
+  width: auto;
 }
